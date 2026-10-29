@@ -1,0 +1,8 @@
+:HL["/Site-Parque-Aquatico/_next/static/chunks/eaff7b2a9e1b1821.css","style"]
+:HL["/Site-Parque-Aquatico/_next/static/chunks/e97a98ef86c3ba0e.css","style"]
+:HL["/Site-Parque-Aquatico/_next/static/chunks/5550c6b72e191b54.css","style"]
+:HL["/Site-Parque-Aquatico/_next/static/media/797e433ab948586e-s.p.29207c2f.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/Site-Parque-Aquatico/_next/static/media/c825fd02acae0153-s.p.1692d83b.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/Site-Parque-Aquatico/_next/static/media/cc014fcb166cf364-s.p.e32417d2.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/Site-Parque-Aquatico/_next/static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"buildId":"SsA4_ZVgaNJTIT0DZblD0","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}

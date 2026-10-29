@@ -1,0 +1,335 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-montserrat);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* ============ MUKAI — tema aquático (estrutura La Villa) ============ */
+  --color-cream: #fefcf5;
+  --color-sand: #faf7ec;
+  --color-navy: #0b2545;
+  --color-navy-2: #13315c;
+  --color-aqua: #1fa3c7;
+  --color-aqua-deep: #17819e;
+  --color-aqua-soft: #dff4fb;
+  --color-gold: #ccbe85;
+  --color-gold-light: #f2e19d;
+  --font-heading: var(--font-cinzel), serif;
+  --font-body: var(--font-montserrat), sans-serif;
+  --font-label: var(--font-raleway), sans-serif;
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: #fefcf5;
+  --foreground: #373737;
+  --card: #ffffff;
+  --card-foreground: #373737;
+  --popover: #ffffff;
+  --popover-foreground: #373737;
+  --primary: #17819e;
+  --primary-foreground: #ffffff;
+  --secondary: #dff4fb;
+  --secondary-foreground: #0b2545;
+  --muted: #f5f2e8;
+  --muted-foreground: #69727d;
+  --accent: #dff4fb;
+  --accent-foreground: #0b2545;
+  --destructive: #c0392b;
+  --destructive-foreground: #ffffff;
+  --border: #e4e0cf;
+  --input: #e4e0cf;
+  --ring: #1fa3c7;
+  --chart-1: #1fa3c7;
+  --chart-2: #0b2545;
+  --chart-3: #ccbe85;
+  --chart-4: #17819e;
+  --chart-5: #dff4fb;
+  --sidebar: #fefcf5;
+  --sidebar-foreground: #373737;
+  --sidebar-primary: #17819e;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #dff4fb;
+  --sidebar-accent-foreground: #0b2545;
+  --sidebar-border: #e4e0cf;
+  --sidebar-ring: #1fa3c7;
+}
+
+.dark {
+  --background: #0b2545;
+  --foreground: #fefcf5;
+  --card: #13315c;
+  --card-foreground: #fefcf5;
+  --popover: #13315c;
+  --popover-foreground: #fefcf5;
+  --primary: #1fa3c7;
+  --primary-foreground: #ffffff;
+  --secondary: #13315c;
+  --secondary-foreground: #fefcf5;
+  --muted: #13315c;
+  --muted-foreground: #a8b3c1;
+  --accent: #13315c;
+  --accent-foreground: #fefcf5;
+  --destructive: #c0392b;
+  --destructive-foreground: #ffffff;
+  --border: #1d3a63;
+  --input: #1d3a63;
+  --ring: #1fa3c7;
+  --chart-1: #1fa3c7;
+  --chart-2: #ccbe85;
+  --chart-3: #17819e;
+  --chart-4: #dff4fb;
+  --chart-5: #0b2545;
+  --sidebar: #0b2545;
+  --sidebar-foreground: #fefcf5;
+  --sidebar-primary: #1fa3c7;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #13315c;
+  --sidebar-accent-foreground: #fefcf5;
+  --sidebar-border: #1d3a63;
+  --sidebar-ring: #1fa3c7;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-montserrat), sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-cinzel), serif;
+  }
+  .font-label {
+    font-family: var(--font-raleway), sans-serif;
+  }
+
+  /* Letra inicial grande dourada — assinatura visual do La Villa */
+  .capitular::first-letter {
+    color: var(--color-gold);
+    font-size: 1.35em;
+    font-weight: 700;
+  }
+
+  /* Label pequeno em caixa alta com tracking — estilo La Villa */
+  .kicker {
+    font-family: var(--font-raleway), sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.42em;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .text-shadow-hero {
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Onda decorativa entre seções */
+  .wave-divider {
+    line-height: 0;
+  }
+
+  /* Scrollbar fina para trilhos horizontais */
+  .scroll-fino::-webkit-scrollbar {
+    height: 6px;
+  }
+  .scroll-fino::-webkit-scrollbar-thumb {
+    background: var(--color-gold);
+    border-radius: 999px;
+  }
+  .scroll-fino::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* Animação suave de entrada */
+@keyframes surgir {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.surgir {
+  animation: surgir 0.8s ease-out both;
+}
+.surgir-1 {
+  animation-delay: 0.15s;
+}
+.surgir-2 {
+  animation-delay: 0.3s;
+}
+.surgir-3 {
+  animation-delay: 0.45s;
+}
+
+@keyframes flutuar {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.flutuar {
+  animation: flutuar 3.2s ease-in-out infinite;
+}
+
+/* ============ Fundo ambiente — movimento sutil ============ */
+
+/* Manchas de luz à deriva (reflexos d'água) */
+@keyframes luz-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(5vw, 4vh, 0) scale(1.07);
+  }
+  66% {
+    transform: translate3d(-3vw, 6vh, 0) scale(0.96);
+  }
+}
+@keyframes luz-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  40% {
+    transform: translate3d(-6vw, -5vh, 0) scale(1.08);
+  }
+  70% {
+    transform: translate3d(4vw, 2vh, 0) scale(0.97);
+  }
+}
+@keyframes luz-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3vw, -6vh, 0) scale(1.1);
+  }
+}
+
+.luz-ambiente {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Bolhas subindo devagar */
+@keyframes subir-bolha {
+  0% {
+    transform: translate3d(0, 12vh, 0);
+    opacity: 0;
+  }
+  8% {
+    opacity: var(--op, 0.28);
+  }
+  92% {
+    opacity: var(--op, 0.28);
+  }
+  100% {
+    transform: translate3d(var(--sway, 24px), -114vh, 0);
+    opacity: 0;
+  }
+}
+
+/* Núcleo branco + borda aqua: aparece no fundo claro E no escuro */
+.bolha-suave {
+  position: absolute;
+  bottom: -14vh;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 32% 30%,
+    rgba(255, 255, 255, 0.95),
+    rgba(151, 222, 244, 0.55) 38%,
+    rgba(31, 163, 199, 0.4) 62%,
+    rgba(31, 163, 199, 0.12) 80%,
+    rgba(31, 163, 199, 0) 84%
+  );
+  box-shadow: 0 0 12px rgba(31, 163, 199, 0.12);
+  animation: subir-bolha linear infinite;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Zoom lento no hero — o parque "respira" */
+@keyframes respiro-suave {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.035);
+  }
+}
+.zoom-suave {
+  animation: respiro-suave 40s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Respeita usuários com movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  .bolha-suave,
+  .luz-ambiente,
+  .zoom-suave,
+  .flutuar {
+    animation: none !important;
+  }
+}

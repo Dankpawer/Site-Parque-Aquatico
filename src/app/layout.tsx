@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Cinzel, Montserrat, Raleway, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./efeitos.css"; // Camada de efeitos visuais (Shopify Editions) — aditiva, isolada
 import { Toaster } from "@/components/ui/toaster";
+import EfeitosVisuais from "@/components/site/EfeitosVisuais";
 
 const cinzel = Cinzel({
   variable: "--font-cinzel",
@@ -60,6 +62,8 @@ export default function RootLayout({
         className={`${cinzel.variable} ${montserrat.variable} ${raleway.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         {children}
+        {/* Camada de microinterações — não renderiza nada, apenas observa */}
+        <EfeitosVisuais />
         <Toaster />
       </body>
     </html>

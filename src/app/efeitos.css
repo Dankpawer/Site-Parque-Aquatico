@@ -1,0 +1,262 @@
+/* ==========================================================================
+   MUKAI · CAMADA DE EFEITOS VISUAIS — inspirada em Shopify Editions
+   ==========================================================================
+   · 100% ADITIVA: nenhum texto, imagem, estrutura ou conteúdo é alterado.
+     O JavaScript apenas ADICIONA as classes .fx-* aos elementos existentes;
+     este arquivo apenas define o comportamento visual dessas classes.
+   · Escopo isolado: tudo é prefixado com .fx- para nunca colidir com o CSS
+     original do site (Tailwind) nem com estilos futuros.
+   · Performance: só animamos opacity / transform / translate / rotate /
+     scale / filter (compositáveis na GPU), com IntersectionObserver e rAF —
+     zero listeners de scroll "pesados", zero layout thrashing.
+   · Acessibilidade: usuários com prefers-reduced-motion não veem NENHUMA
+     animação desta camada (as regras de estado inicial ficam dentro de
+     @media (prefers-reduced-motion: no-preference)).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0) Variáveis do sistema de efeitos + reforço de rolagem suave
+   -------------------------------------------------------------------------- */
+:root {
+  /* Curva de saída suave — assinatura das animações Shopify Editions */
+  --fx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --fx-dur: 0.9s;                       /* duração padrão da revelação */
+  --fx-glass: rgba(254, 252, 245, 0.78); /* vidro creme translúcido do header */
+  /* Fio dourado/aqua que acende sob o header ao rolar */
+  --fx-hairline: linear-gradient(
+    90deg,
+    transparent,
+    rgba(31, 163, 199, 0.35) 18%,
+    rgba(204, 190, 133, 0.55) 50%,
+    rgba(31, 163, 199, 0.35) 82%,
+    transparent
+  );
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth; /* rolagem suave já usada pelo site, aqui é reforço */
+  }
+}
+
+/* ==========================================================================
+   1) SCROLL REVEAL & STAGGER — fade-in-up em cascata
+   ==========================================================================
+   O JS marca elementos com .fx-reveal (+ variável --fx-d de atraso em
+   cascata) e, quando eles entram na viewport, adiciona .fx-in.
+   Sem JavaScript, NADA fica escondido: as classes só existem via JS.
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .fx-reveal {
+    opacity: 0;
+    transform: translate3d(0, 34px, 0) scale(0.988);
+    transition:
+      opacity 0.75s var(--fx-ease) var(--fx-d, 0ms),
+      transform var(--fx-dur) var(--fx-ease) var(--fx-d, 0ms),
+      filter var(--fx-dur) var(--fx-ease) var(--fx-d, 0ms);
+    will-change: opacity, transform;
+  }
+
+  /* Variantes direcionais (definidas via data-fx pelo JS) */
+  .fx-reveal[data-fx="left"] {
+    transform: translate3d(-44px, 14px, 0) scale(0.99);
+  }
+  .fx-reveal[data-fx="right"] {
+    transform: translate3d(44px, 14px, 0) scale(0.99);
+  }
+  .fx-reveal[data-fx="zoom"] {
+    transform: scale(0.925);
+  }
+
+  /* Toque "editorial" para títulos: desfoque que se dissolve */
+  .fx-reveal.fx-soft {
+    filter: blur(7px);
+  }
+
+  /* Estado final — depois das variantes na cascata, então sempre vence */
+  .fx-reveal.fx-in {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+    will-change: auto; /* libera a camada GPU após entrar */
+  }
+}
+
+/* ==========================================================================
+   2) HEADER DINÂMICO — glassmorphism + retração (shrink)
+   ==========================================================================
+   O header do site já troca de cor ao rolar (estado React). Aqui apenas
+   REFINAMOS esse estado: vidro mais translúcido e saturado, fio de luz
+   dourado na base, sombra progressiva e retração da logo/navegação.
+   ========================================================================== */
+
+/* Fio de luz na base do header — invisível no topo da página */
+.fx-header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: var(--fx-hairline);
+  opacity: 0;
+  transition: opacity 0.5s var(--fx-ease);
+  pointer-events: none;
+}
+
+/* Estado "rolado": vidro fosco com saturação elevada (glassmorphism) */
+.fx-header.fx-scrolled {
+  background: var(--fx-glass);
+  -webkit-backdrop-filter: blur(14px) saturate(165%);
+  backdrop-filter: blur(14px) saturate(165%);
+  box-shadow:
+    0 18px 42px -26px rgba(11, 37, 69, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+.fx-header.fx-scrolled::after {
+  opacity: 1;
+}
+
+/* Retração: a logo encolhe levemente, ancorada à esquerda */
+.fx-logo {
+  transform-origin: left center;
+  transition: transform 0.45s var(--fx-ease);
+}
+.fx-header.fx-scrolled .fx-logo {
+  transform: scale(0.92);
+}
+
+/* Navegação acompanha a retração (respiro levemente menor) */
+.fx-header.fx-scrolled nav a,
+.fx-header.fx-scrolled nav button {
+  padding-left: 0.65rem;
+  padding-right: 0.65rem;
+}
+
+/* ==========================================================================
+   3) MICROINTERAÇÕES — brilho expansivo (glossy shine) nos CTAs
+   ==========================================================================
+   Um reflexo de luz atravessa o botão no hover + escala leve (1.03).
+   Usa as propriedades individuais scale/translate, então COMPõe com os
+   hovers Tailwind já existentes (ex.: hover:-translate-y-0.5) — nada
+   é sobrescrito, tudo se soma.
+   ========================================================================== */
+.fx-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    scale 0.35s var(--fx-ease),
+    translate 0.35s var(--fx-ease),
+    background-color 0.3s ease,
+    box-shadow 0.4s var(--fx-ease);
+}
+
+/* O reflexo: faixa diagonal branca fora da área visível, à esquerda */
+.fx-shine::after {
+  content: "";
+  position: absolute;
+  inset: -25% -35%;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.16) 42%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.16) 58%,
+    transparent 70%
+  );
+  transform: translateX(-125%);
+  transition: transform 0.85s var(--fx-ease);
+  pointer-events: none;
+}
+
+/* Hover: luz atravessa o botão + elevação com escala de 1.03 */
+.fx-shine:hover {
+  scale: 1.03;
+}
+.fx-shine:hover::after {
+  transform: translateX(125%);
+}
+
+/* ==========================================================================
+   4) CARDS — elevação 3D suave + sombra progressiva + zoom interno
+   ==========================================================================
+   Novamente com propriedades individuais (translate/rotate/scale) para
+   compor com os hovers Tailwind existentes dos cards.
+   .fx-card       → cards de grade (atrações, ingressos, destaques, depoimentos)
+   .fx-card--lite → linhas/listas (FAQ, conforto, tiles do Instagram)
+   ========================================================================== */
+.fx-card {
+  transition:
+    /* entrada revelada usa transform com stagger; hovers usam o resto */
+    transform var(--fx-dur) var(--fx-ease) var(--fx-d, 0ms),
+    opacity 0.75s var(--fx-ease) var(--fx-d, 0ms),
+    translate 0.45s var(--fx-ease),
+    rotate 0.5s var(--fx-ease),
+    box-shadow 0.5s var(--fx-ease),
+    border-color 0.4s ease;
+}
+
+/* Elevação 3D: leve inclinação no eixo X + sombra em duas camadas */
+.fx-card:hover {
+  translate: 0 -7px;
+  rotate: x 1.1deg;
+  box-shadow:
+    0 36px 68px -32px rgba(31, 163, 199, 0.42),
+    0 16px 32px -20px rgba(11, 37, 69, 0.32);
+  border-color: rgba(31, 163, 199, 0.45);
+}
+
+/* Versão "lite": mesmas sensações, sem inclinação 3D */
+.fx-card--lite:hover {
+  rotate: initial;
+  translate: 0 -5px;
+}
+
+/* Zoom interno da imagem sem sair do container (o pai tem overflow hidden) */
+.fx-zoom img {
+  transition: scale 0.8s var(--fx-ease);
+  will-change: scale;
+}
+.fx-zoom:hover img {
+  scale: 1.055;
+}
+
+/* ==========================================================================
+   5) PARALLAX SUAVE — hero (vídeo do drone) e textura da história
+   ==========================================================================
+   O JS aplica translate3d via requestAnimationFrame apenas enquanto a
+   seção está visível. O scale inicial evita qualquer fresta nas bordas.
+   ========================================================================== */
+.fx-parallax-hero {
+  transform: translate3d(0, 0, 0) scale(1.14);
+  will-change: transform;
+}
+.fx-parallax-lento {
+  will-change: transform;
+}
+
+/* ==========================================================================
+   6) REDE DE SEGURANÇA — prefers-reduced-motion desliga TUDO
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .fx-reveal,
+  .fx-reveal.fx-in,
+  .fx-card,
+  .fx-shine,
+  .fx-shine::after,
+  .fx-header,
+  .fx-header::after,
+  .fx-logo,
+  .fx-zoom img {
+    transition: none !important;
+    animation: none !important;
+  }
+  .fx-reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .fx-parallax-hero,
+  .fx-parallax-lento {
+    transform: none !important;
+  }
+}

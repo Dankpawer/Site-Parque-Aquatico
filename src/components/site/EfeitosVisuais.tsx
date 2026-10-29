@@ -34,9 +34,22 @@ export default function EfeitosVisuais() {
      * ==================================================================== */
     const header = document.querySelector("header");
     if (header) {
-      header.classList.add("fx-header");
-      // O primeiro <a> do header é a logo (MUKAI · Parque Aquático)
-      header.querySelector("a")?.classList.add("fx-logo");
+      const logo = header.querySelector("a"); // primeiro <a> = logo MUKAI
+      const ctaHeader = header.querySelector("a[href='#ingressos']");
+
+      /* O React reescreve o className do header (e do CTA) quando o estado
+       * interno "rolou" muda — o que apagaria classes adicionadas via JS.
+       * Este guardião reaplica .fx-* no mesmo tick em que isso acontece. */
+      const reaplicarHeader = () => {
+        header.classList.add("fx-header");
+        header.classList.toggle("fx-scrolled", window.scrollY > 60);
+        logo?.classList.add("fx-logo");
+        ctaHeader?.classList.add("fx-shine");
+      };
+      reaplicarHeader();
+      const guardiao = new MutationObserver(reaplicarHeader);
+      guardiao.observe(header, { attributes: true, attributeFilter: ["class"] });
+      limpezas.push(() => guardiao.disconnect());
 
       let pendente = 0;
       const aplicarHeader = () => {
